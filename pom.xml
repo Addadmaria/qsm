@@ -50,6 +50,12 @@
 			<artifactId>mssql-jdbc</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<!-- <dependency>
+		    <groupId>com.mysql</groupId>
+		    <artifactId>mysql-connector-j</artifactId>
+		    <scope>runtime</scope>
+		</dependency> -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -60,6 +66,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+
 	</dependencies>
 
 	<build>

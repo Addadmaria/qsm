@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.universite.qsm.dtos.ExamDTO;
+import com.universite.qsm.dtos.ExamSummaryDTO;
 import com.universite.qsm.dtos.UserDTO;
 import com.universite.qsm.entities.Exam;
 import com.universite.qsm.entities.User;
@@ -15,8 +16,10 @@ import com.universite.qsm.repositories.UserRepository;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RestController @RequestMapping("/api/exams") @RequiredArgsConstructor 
+@CrossOrigin(origins = "*")
+@RestController @RequestMapping("/api/exams") 
 public class ExamController {
 	@Autowired
 	private ExamRepository examRepository;
@@ -44,5 +47,19 @@ public class ExamController {
 	public List<Exam> getAllExams() {
 	    return examRepository.findAll();
 	}
+
+	@GetMapping("/exams")
+    public List<ExamSummaryDTO> getExams() {
+        return examRepository
+                .findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private ExamSummaryDTO toDto(Exam e) {
+        // only expose id & title
+        return new ExamSummaryDTO(e.getExamId(), e.getTitle());
+    }
 
 }

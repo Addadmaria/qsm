@@ -1,20 +1,11 @@
 package com.universite.qsm.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Table(
-  name = "choices",
-  uniqueConstraints = @UniqueConstraint(columnNames = {"question_id", "is_correct"})
-)
-@Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
+@Table(name = "choices")              // ← removed uniqueConstraints
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Choice {
 
     @Id
@@ -30,45 +21,4 @@ public class Choice {
 
     @Column(name = "is_correct", nullable = false)
     private Boolean isCorrect = false;
-
-	public Long getChoiceId() {
-		return choiceId;
-	}
-
-	public void setChoiceId(Long choiceId) {
-		this.choiceId = choiceId;
-	}
-
-	public Question getQuestion() {
-		return question;
-	}
-
-	public void setQuestion(Question question) {
-		this.question = question;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public Boolean getIsCorrect() {
-		return isCorrect;
-	}
-
-	public void setIsCorrect(Boolean isCorrect) {
-		this.isCorrect = isCorrect;
-	}
-
-	public Choice() {
-		super();
-		this.question = question;
-		this.text = text;
-		this.isCorrect = isCorrect;
-	}
-    
-    
 }

@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "exams")
-@Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 
 public class Exam {
 
@@ -39,9 +39,11 @@ public class Exam {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
     private List<Question> questions;
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
     private List<Attempt> attempts;
 
     // ... constructors, getters/setters, pre-update callback
@@ -117,7 +119,6 @@ public class Exam {
 	}
 
 	public Exam() {
-		super();
 		this.title = title;
 		this.description = description;
 		this.createdBy = createdBy;

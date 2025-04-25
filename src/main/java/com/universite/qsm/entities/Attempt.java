@@ -11,10 +11,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "attempts")
-@Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
 public class Attempt {
 
     @Id
@@ -96,7 +92,6 @@ public class Attempt {
 	}
 
 	public Attempt() {
-		super();
 		this.exam = exam;
 		this.student = student;
 		this.startedAt = startedAt;

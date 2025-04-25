@@ -11,10 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
+
 public class User {
 
     @Id
@@ -115,7 +112,6 @@ public class User {
 	}
 
 	public User() {
-		super();
 		this.name = name;
 		this.email = email;
 		this.passwordHash = passwordHash;

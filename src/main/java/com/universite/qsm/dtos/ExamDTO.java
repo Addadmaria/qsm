@@ -16,7 +16,7 @@ public class ExamDTO {
     private Long examId;
     private String title;
     private String description;
-    private Long createdBy; // userId
+    private Long createdBy; 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<QuestionDTO> questions;
@@ -64,7 +64,6 @@ public class ExamDTO {
 	}
 	public ExamDTO(String title, String description, Long createdBy, LocalDateTime createdAt, LocalDateTime updatedAt,
 			List<QuestionDTO> questions) {
-		super();
 		this.title = title;
 		this.description = description;
 		this.createdBy = createdBy;

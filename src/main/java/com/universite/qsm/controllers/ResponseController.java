@@ -19,7 +19,8 @@ import com.universite.qsm.repositories.ResponseRepository;
 
 import java.time.LocalDateTime; import java.util.List;
 
-@RestController @RequestMapping("/api/responses") @RequiredArgsConstructor public class ResponseController {
+@RestController @RequestMapping("/api/responses")@CrossOrigin(origins = "*") 
+public class ResponseController {
 
 
 @Autowired

@@ -10,10 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "responses")
-@Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
+
 public class Response {
 
     @Id
@@ -76,7 +73,6 @@ public class Response {
 	}
 
 	public Response() {
-		super();
 		this.attempt = attempt;
 		this.question = question;
 		this.choice = choice;

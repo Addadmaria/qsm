@@ -1,7 +1,7 @@
 package com.universite.qsm.controllers;
 
-import lombok.RequiredArgsConstructor; 
-import org.springframework.beans.factory.annotation.Autowired; 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,31 +9,53 @@ import com.universite.qsm.dtos.UserDTO;
 import com.universite.qsm.entities.User;
 import com.universite.qsm.repositories.UserRepository;
 
-import java.sql.Types;
 import java.util.List;
+import java.util.Optional;
 
-@RestController @RequestMapping("/api/users") @RequiredArgsConstructor 
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
+    @Autowired
+    private UserRepository userRepository;
 
-@Autowired
-private UserRepository userRepository;
+    @PostMapping("/create")
+    public ResponseEntity<?> createUser(@RequestBody UserDTO dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setPasswordHash(dto.getPassword()); // à sécurise plus tard
+        user.setRole(User.Role.valueOf(dto.getRole()));
+        userRepository.save(user);
+        return ResponseEntity.ok("Utilisateur créé avec succès !");
+    }
 
-@PostMapping("/create")
-public ResponseEntity<?> createUser(@RequestBody UserDTO dto) {
-    User user = new User();
-    user.setName(dto.getName());
-    user.setEmail(dto.getEmail());
-    user.setPasswordHash("1234"); // à sécuriser plus tard
-    user.setRole(User.Role.valueOf(dto.getRole()));
+    @GetMapping("/all")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
-    userRepository.save(user);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDTO dto) {
+        Optional<User> userOpt = userRepository.findByEmail(dto.getEmail());
 
-    return ResponseEntity.ok("Utilisateur créé avec succès !");
-}
+        if (userOpt.isEmpty() || !userOpt.get().getPasswordHash().equals(dto.getPassword())) {
+            return ResponseEntity.status(401).body("Email ou mot de passe incorrect.");
+        }
 
-@GetMapping("/all")
-public List<User> getAllUsers() {
-    return userRepository.findAll();
-}
+        User user = userOpt.get();
+
+        // Construction d'une réponse minimale pour le front
+        UserDTO responseDTO = new UserDTO();
+        responseDTO.setUserId(user.getUserId());
+        responseDTO.setName(user.getName());
+        responseDTO.setEmail(user.getEmail());
+        responseDTO.setRole(user.getRole().name());
+
+        return ResponseEntity.ok().body(new java.util.HashMap<>() {{
+            put("success", true);
+            put("user", responseDTO);
+        }});
+    }
 }

@@ -10,5 +10,7 @@ import com.universite.qsm.entities.Choice;
 
 @Repository
 public interface ChoiceRepository extends JpaRepository< Choice , Long > {
+
+    long countByQuestionQuestionIdAndIsCorrect(Long questionId, Boolean isCorrect);
 	
 }

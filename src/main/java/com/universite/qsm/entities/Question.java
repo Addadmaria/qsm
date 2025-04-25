@@ -10,10 +10,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "questions")
-@Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
 public class Question {
 
     @Id
@@ -74,7 +70,6 @@ public class Question {
 	}
 
 	public Question() {
-		super();
 		this.exam = exam;
 		this.text = text;
 		this.sortOrder = sortOrder;
