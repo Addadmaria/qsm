@@ -20,30 +20,30 @@ import java.time.LocalDateTime; import java.util.List;
 public class AttemptController {
 
 
-@Autowired
-private AttemptRepository attemptRepository;
+    @Autowired private AttemptRepository attemptRepository;
+    @Autowired private ExamRepository examRepository;
+    @Autowired private UserRepository userRepository;
 
-@Autowired
-private UserRepository userRepository;
+    @PostMapping("/create")
+    public ResponseEntity<AttemptDTO> create(@RequestBody AttemptDTO dto) {
+        Exam exam    = examRepository.findById(dto.getExamId())
+                          .orElseThrow();
+        User student = userRepository.findById(dto.getStudentId())
+                          .orElseThrow();
 
-@Autowired
-private ExamRepository examRepository;
+        Attempt at = new Attempt();
+        at.setExam(exam);
+        at.setStudent(student);
+        at.setStartedAt(LocalDateTime.now());
+        Attempt saved = attemptRepository.save(at);
 
-@PostMapping("/create")
-public ResponseEntity<?> createAttempt(@RequestBody AttemptDTO dto) {
-    User student = userRepository.findById(dto.getStudentId())
-            .orElseThrow(() -> new RuntimeException("Étudiant introuvable"));
-    Exam exam = examRepository.findById(dto.getExamId())
-            .orElseThrow(() -> new RuntimeException("Examen introuvable"));
-
-    Attempt attempt = new Attempt();
-    attempt.setExam(exam);
-    attempt.setStudent(student);
-    attempt.setStartedAt(LocalDateTime.now());
-
-    attemptRepository.save(attempt);
-    return ResponseEntity.ok("Tentative enregistrée !");
-}
+        AttemptDTO out = new AttemptDTO();
+        out.setAttemptId(saved.getAttemptId());
+        out.setExamId(exam.getExamId());
+        out.setStudentId(student.getUserId());
+        out.setStartedAt(saved.getStartedAt());
+        return ResponseEntity.ok(out);
+    }
 
 @GetMapping("/all")
 public List<Attempt> getAllAttempts() {

@@ -1,6 +1,7 @@
 package com.universite.qsm.controllers;
 
 import com.universite.qsm.dtos.QuestionDTO;
+import com.universite.qsm.dtos.QuestionWithChoicesDTO;
 import com.universite.qsm.entities.Exam;
 import com.universite.qsm.entities.Question;
 import com.universite.qsm.repositories.ExamRepository;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/questions")
@@ -43,5 +45,28 @@ public class QuestionController {
     @GetMapping("/all")
     public List<Question> getAllQuestions() {
         return questionRepository.findAll();
+    }
+
+    @GetMapping("/exam/{examId}")
+    public List<QuestionWithChoicesDTO> getByExam(@PathVariable Long examId) {
+        return questionRepository
+            .findByExamExamId(examId)
+            .stream()
+            .map(q -> {
+              QuestionWithChoicesDTO dto = new QuestionWithChoicesDTO();
+              dto.setQuestionId(q.getQuestionId());
+              dto.setText(q.getText());
+              dto.setChoices(
+                q.getChoices()
+                 .stream()
+                 .map(c -> new com.universite.qsm.dtos.ChoiceDTO(
+                    c.getChoiceId(),
+                    q.getQuestionId(),
+                    c.getText(),
+                    null // don’t expose correctness
+                 )).collect(Collectors.toList())
+              );
+              return dto;
+            }).collect(Collectors.toList());
     }
 }
