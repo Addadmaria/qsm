@@ -10,4 +10,5 @@ import com.universite.qsm.entities.Question;
 @Repository
 public interface QuestionRepository extends JpaRepository< Question , Long > {
 	List<Question> findByExamExamId(Long examId);
+    long countByExamExamId(Long examId);
 }

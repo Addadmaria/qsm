@@ -1,7 +1,8 @@
 package com.universite.qsm.controllers;
 
 import lombok.RequiredArgsConstructor; 
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,20 +29,29 @@ public class ExamController {
 	private UserRepository userRepository;
 
 	@PostMapping("/create")
-	public ResponseEntity<?> createExam(@RequestBody ExamDTO dto) {
-	    User creator = userRepository.findById(dto.getCreatedBy())
-	            .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+    public ResponseEntity<?> createExam(@RequestBody ExamDTO dto) {
+        // 1) Load the user
+        User creator = userRepository.findById(dto.getCreatedBy())
+          .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
-	    Exam exam = new Exam();
-	    exam.setTitle(dto.getTitle());
-	    exam.setDescription(dto.getDescription());
-	    exam.setCreatedBy(creator);
-	    exam.setCreatedAt(LocalDateTime.now());
-	    exam.setUpdatedAt(LocalDateTime.now());
+        // 2) Server-side authorization: only MENTOR can create exams
+        if (creator.getRole() != User.Role.MENTOR) {
+            return ResponseEntity
+              .status(HttpStatus.FORBIDDEN)
+              .body("Accès refusé: rôle mentor requis");
+        }
 
-	    examRepository.save(exam);
-	    return ResponseEntity.ok("Examen créé avec succès !");
-	}
+        // 3) Proceed as before
+        Exam exam = new Exam();
+        exam.setTitle(dto.getTitle());
+        exam.setDescription(dto.getDescription());
+        exam.setCreatedBy(creator);
+        exam.setCreatedAt(LocalDateTime.now());
+        exam.setUpdatedAt(LocalDateTime.now());
+
+        examRepository.save(exam);
+        return ResponseEntity.ok("Examen créé avec succès !");
+    }
 
 	@GetMapping("/all")
 	public List<Exam> getAllExams() {
