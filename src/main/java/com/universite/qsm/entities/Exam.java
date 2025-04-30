@@ -28,8 +28,9 @@ public class Exam {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
+	@JsonIgnore
     private User createdBy;
 
     @Column(nullable = false)

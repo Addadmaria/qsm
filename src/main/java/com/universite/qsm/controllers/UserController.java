@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.universite.qsm.dtos.UserDTO;
+import com.universite.qsm.dtos.UseradminDto;
 import com.universite.qsm.entities.User;
 import com.universite.qsm.repositories.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,6 +37,18 @@ public class UserController {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    @GetMapping("/users")
+    public List<UseradminDto> getUsers() {
+        return userRepository.findAll().stream()
+        .map(user -> new UseradminDto(
+            user.getUserId(),
+            user.getName(),
+            user.getEmail(),
+            user.getRole().name()
+        )).collect(Collectors.toList()); // Added closing parenthesis and collect() method
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDTO dto) {

@@ -44,7 +44,7 @@ public class User {
     // getters/setters, constructors...
 
     public enum Role {
-        MENTOR, STUDENT
+        ADMIN, MENTOR, STUDENT
     }
 
 	public Long getUserId() {
